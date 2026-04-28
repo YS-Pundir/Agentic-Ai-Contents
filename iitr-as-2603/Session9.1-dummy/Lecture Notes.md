@@ -4,8 +4,6 @@ In our last sessions, we used **pandas** to load, clean, and analyse data sittin
 
 ## Why Do We Need Databases?
 
-![Why databases: pandas and CSV live in temporary workspace memory while a database persists on disk and serves many users at once — persistence, concurrency, scale](https://s13n-curr-images-bucket.s3.ap-south-1.amazonaws.com/iitr-as-2603/session10/session10-why-databases.png)
-
 Before we jump into SQL, we must first understand **why databases exist at all**. Pandas, Excel, and CSV files feel enough when we are learning, but real companies need something much stronger.
 
 - **Official Definition:** A **Database (DB)** is an organised collection of data stored electronically in a computer system, designed so that data can be added, read, updated, and deleted **safely and efficiently** by many users at the same time.
@@ -40,8 +38,6 @@ Now that we know **why** databases are needed, let us quickly look at the **diff
 
 ## Types of Databases
 
-![Relational SQL databases use structured linked tables; NoSQL databases use flexible formats like documents, key-value, graph — choose what fits the data](https://s13n-curr-images-bucket.s3.ap-south-1.amazonaws.com/iitr-as-2603/session10/session10-types-of-databases.png)
-
 Not every database is the same. Different kinds of data need different kinds of databases, just like we use different vehicles for different journeys.
 
 ### 1. Relational Databases (SQL Databases)
@@ -60,7 +56,24 @@ Not every database is the same. Different kinds of data need different kinds of 
 - **Popular Examples:** **MongoDB** (document), **Redis** (key-value), **Cassandra** (wide-column), **Neo4j** (graph).
 - **Best For:** Chat apps, social feeds, caching, recommendation engines, real-time analytics.
 
-Our focus in this course is on **Relational Databases** and SQL.
+### 3. Other Common Types (Quick Overview)
+
+You do not need to master these today, but you should at least **recognise the names**.
+
+- **Cloud Databases:** Databases hosted on the internet, like **Amazon RDS, Google BigQuery, Snowflake**. You pay as you use.
+- **Data Warehouses:** Special databases built for **analytics on huge historical data**, like **Snowflake, Redshift, BigQuery**.
+- **In-Memory Databases:** Keep data in RAM for **lightning-fast access**, like **Redis** used in live dashboards and shopping carts.
+- **Time-Series Databases:** Designed for sensor or stock-price data arriving every second, like **InfluxDB**.
+
+### Quick Comparison
+
+| Type | Data Shape | Example | Typical Use |
+| :--- | :--- | :--- | :--- |
+| Relational (SQL) | Tables (rows + columns) | MySQL, PostgreSQL | Banks, e-commerce, HR |
+| Document (NoSQL) | JSON-like documents | MongoDB | Social media, user profiles |
+| Key-Value (NoSQL) | Key → Value pairs | Redis | Caching, carts, sessions |
+| Graph (NoSQL) | Nodes + connections | Neo4j | Friend networks, fraud detection |
+| Data Warehouse | Huge analytical tables | Snowflake, BigQuery | Business reporting |
 
 ## Real-World Use Cases of Databases
 
@@ -226,6 +239,25 @@ FROM employees;
 - We list the **exact column names** after `SELECT`, separated by **commas**.
 - The database returns a new table with **only those columns** for all 10 employees.
 - The **order we write** (Name, Salary) is the **order we get back**, which is useful for reports.
+
+### Renaming Columns in the Output with `AS`
+
+Sometimes we want the output column name to look **friendlier** in a report. We use **`AS`** to give it an alias.
+
+```sql
+-- Rename 'Name' to 'Employee Name' and 'Salary' to 'Monthly Pay'
+SELECT Name       AS "Employee Name",
+       Salary     AS "Monthly Pay",
+       Department AS Team
+FROM employees;
+```
+
+**How the code works:**
+
+- `AS "Employee Name"` renames the output column. Quotes are used because the alias has a **space** in it.
+- For single-word aliases like `Team`, quotes are **not needed**.
+- The **original table column is NOT changed** — only the **display name** in the result is changed.
+- This is very useful when preparing data for dashboards or Excel exports.
 
 ### Getting Unique Values with `DISTINCT`
 
@@ -737,6 +769,7 @@ LIMIT 3;
 | Null check | `WHERE City IS NULL` | `df[df["City"].isna()]` |
 | Sort | `ORDER BY Salary DESC` | `df.sort_values("Salary", ascending=False)` |
 | Top N | `LIMIT 3` | `df.head(3)` |
+| Rename column | `SELECT Name AS "Emp Name"` | `df.rename(columns={"Name":"Emp Name"})` |
 
 ## Common Doubts and Mistakes
 
@@ -762,6 +795,7 @@ Use this table as your one-page cheat sheet before assignments and interviews.
 | `SELECT` | Reads columns from a table | `SELECT Name FROM employees` |
 | `SELECT *` | Reads all columns | `SELECT * FROM employees` |
 | `FROM` | Tells which table to read | `FROM employees` |
+| `AS` | Renames a column in output | `SELECT Name AS "Emp Name"` |
 | `DISTINCT` | Removes duplicates | `SELECT DISTINCT City FROM employees` |
 | `WHERE` | Filters rows by a condition | `WHERE Salary > 50000` |
 | `=`, `<>`, `>`, `<`, `>=`, `<=` | Comparison operators | `WHERE Salary >= 60000` |
